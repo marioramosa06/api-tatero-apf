@@ -8,7 +8,7 @@ exports.createInvoice = async (req, res) => {
     const endOfDay = new Date(inputDate);
     endOfDay.setUTCHours(23, 59, 59, 999);
     const existing = await Invoice.findOne({
-      user: req.body.user,
+      user: req.userId,
       date: {
         $gte: startOfDay,
         $lte: endOfDay,
@@ -20,7 +20,7 @@ exports.createInvoice = async (req, res) => {
       );
     }
 
-    const invoice = new Invoice(req.body);
+    const invoice = new Invoice({ ...req.body, user: req.userId });
     await invoice.save();
     res.status(201).json(invoice);
   } catch (error) {
@@ -30,7 +30,10 @@ exports.createInvoice = async (req, res) => {
 
 exports.getInvoices = async (req, res) => {
   try {
-    const invoices = await Invoice.find().populate("user", "name email");
+    const invoices = await Invoice.find({ user: req.userId }).populate(
+      "user",
+      "name email",
+    );
     res.status(200).json(invoices);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -53,6 +56,7 @@ exports.getInvoicesByRange = async (req, res) => {
     end.setUTCHours(23, 59, 59, 999);
 
     const invoices = await Invoice.find({
+      user: req.userId,
       date: {
         $gte: start,
         $lte: end,
@@ -67,7 +71,10 @@ exports.getInvoicesByRange = async (req, res) => {
 
 exports.getInvoiceById = async (req, res) => {
   try {
-    const invoice = await Invoice.findById(req.params.id).populate("user");
+    const invoice = await Invoice.findOne({
+      _id: req.params.id,
+      user: req.userId,
+    }).populate("user");
     if (!invoice) {
       return res.status(404).json({ error: "Facture non trouvée" });
     }
@@ -79,10 +86,11 @@ exports.getInvoiceById = async (req, res) => {
 
 exports.updateInvoice = async (req, res) => {
   try {
-    const invoice = await Invoice.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const invoice = await Invoice.findOneAndUpdate(
+      { _id: req.params.id, user: req.userId },
+      { ...req.body, user: req.userId },
+      { new: true, runValidators: true },
+    );
     if (!invoice) {
       return res.status(404).json({ error: "Facture non trouvée" });
     }
@@ -94,7 +102,10 @@ exports.updateInvoice = async (req, res) => {
 
 exports.deleteInvoice = async (req, res) => {
   try {
-    const invoice = await Invoice.findByIdAndDelete(req.params.id);
+    const invoice = await Invoice.findOneAndDelete({
+      _id: req.params.id,
+      user: req.userId,
+    });
     if (!invoice) {
       return res.status(404).json({ error: "Facture non trouvée" });
     }
