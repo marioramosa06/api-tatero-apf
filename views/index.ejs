@@ -1,67 +1,289 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#f4f6f2">
-    <title>Tatero API</title>
+    <meta name="theme-color" content="#f5f7f1">
+    <title>Tatero | API</title>
     <style>
       :root {
         color-scheme: light;
-        font-family: "Segoe UI", sans-serif;
-        color: #17231f;
-        background: #f4f6f2;
-        font-synthesis: none;
+        --primary: #2b3818;
+        --primary-soft: #edf4df;
+        --accent-lime: #9ac343;
+        --bg-color: #f5f7f1;
+        --bg-muted: #edf1e8;
+        --border-color: #dfe7d8;
+        --text-main: #1d2a17;
+        --text-muted: #586a4b;
+        --card-bg: #ffffff;
+        --surface-glass: rgba(255, 255, 255, 0.9);
+        --bg-glow: rgba(154, 195, 67, 0.18);
+        --bg-gradient-start: #f9faf6;
+        --shadow-sm: 0 8px 24px rgba(26, 34, 22, 0.06);
+        --shadow-hover: 0 18px 36px rgba(26, 34, 22, 0.12);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --primary: #b5d77c;
+          --primary-soft: rgba(154, 195, 67, 0.16);
+          --bg-color: #11160f;
+          --bg-muted: #1b2418;
+          --border-color: #303b2b;
+          --text-main: #edf3e6;
+          --text-muted: #b2c0a4;
+          --card-bg: #1a2117;
+          --surface-glass: rgba(26, 33, 23, 0.94);
+          --bg-glow: rgba(154, 195, 67, 0.08);
+          --bg-gradient-start: #151b12;
+          --shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.2);
+          --shadow-hover: 0 18px 36px rgba(0, 0, 0, 0.32);
+        }
       }
 
       * { box-sizing: border-box; }
-      body { margin: 0; min-height: 100vh; }
-      main { width: min(880px, calc(100% - 40px)); margin: 0 auto; padding: 72px 0; }
-      .eyebrow { color: #527262; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-      h1 { margin: 12px 0; font-size: clamp(36px, 7vw, 58px); line-height: 1.05; }
-      .intro { max-width: 580px; color: #5f6e67; font-size: 17px; line-height: 1.6; }
-      .status { display: inline-flex; align-items: center; gap: 9px; margin: 24px 0 42px; padding: 9px 13px; border: 1px solid #d5e2d9; border-radius: 999px; background: #fff; font-size: 14px; }
-      .status::before { width: 8px; height: 8px; border-radius: 50%; background: #33845b; content: ""; }
-      .base-url { margin: 0 0 12px; color: #5f6e67; font-size: 13px; font-weight: 700; text-transform: uppercase; }
-      code { color: #17613e; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
-      .base-value { display: inline-block; margin-bottom: 30px; padding: 11px 14px; border: 1px solid #dce3dd; border-radius: 6px; background: #fff; font-size: 14px; overflow-wrap: anywhere; }
-      h2 { margin: 0 0 12px; font-size: 20px; }
-      .endpoint-list { border-top: 1px solid #dce3dd; }
-      .endpoint { display: grid; grid-template-columns: 76px minmax(140px, 1fr) 1.2fr; gap: 16px; align-items: center; padding: 15px 4px; border-bottom: 1px solid #dce3dd; }
-      .method { color: #527262; font-size: 12px; font-weight: 800; }
-      .path { font-size: 13px; }
-      .description { color: #68766f; font-size: 14px; }
-      footer { margin-top: 36px; color: #87918b; font-size: 13px; }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        overflow-x: hidden;
+        background:
+          radial-gradient(circle at top left, var(--bg-glow), transparent 26%),
+          linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-color) 100%);
+        color: var(--text-main);
+        font-family: Inter, "Segoe UI", sans-serif;
+        line-height: 1.6;
+      }
+
+      main {
+        width: min(1240px, 100%);
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 48px 24px 24px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .hero {
+        padding: 28px 0 34px;
+        text-align: center;
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.5rem, 7vw, 4.5rem);
+        line-height: 1.05;
+        letter-spacing: -0.06em;
+      }
+
+      .intro {
+        max-width: 680px;
+        margin: 18px auto 0;
+        color: var(--text-muted);
+        font-size: clamp(1rem, 2vw, 1.1rem);
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 24px;
+        padding: 8px 14px;
+        border: 1px solid var(--border-color);
+        border-radius: 999px;
+        background: var(--surface-glass);
+        box-shadow: var(--shadow-sm);
+        font-size: 0.875rem;
+        font-weight: 700;
+      }
+
+      .status::before {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #52a56c;
+        content: "";
+        box-shadow: 0 0 0 4px rgba(82, 165, 108, 0.12);
+      }
+
+      .base-card,
+      .endpoint {
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        background: var(--surface-glass);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .base-card {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 36px;
+        padding: 20px 24px;
+      }
+
+      .base-label,
+      .section-kicker {
+        display: block;
+        margin: 0 0 4px;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      code {
+        color: var(--primary);
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        overflow-wrap: anywhere;
+      }
+
+      .base-value {
+        font-size: 1rem;
+        font-weight: 700;
+      }
+
+      .base-badge {
+        padding: 7px 11px;
+        border-radius: 10px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-size: 0.8rem;
+        font-weight: 800;
+      }
+
+      .section-heading {
+        margin-bottom: 16px;
+      }
+
+      .section-heading h2 {
+        margin: 0;
+        font-size: clamp(1.4rem, 3vw, 1.8rem);
+        letter-spacing: -0.03em;
+      }
+
+      .endpoint-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+        gap: 14px;
+      }
+
+      .endpoint {
+        min-width: 0;
+        padding: 18px 20px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      }
+
+      .endpoint:hover {
+        transform: translateY(-3px);
+        border-color: rgba(154, 195, 67, 0.55);
+        box-shadow: var(--shadow-hover);
+      }
+
+      .endpoint-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .method {
+        min-width: 56px;
+        padding: 4px 8px;
+        border-radius: 8px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-size: 0.7rem;
+        font-weight: 900;
+        text-align: center;
+      }
+
+      .path {
+        font-size: 0.87rem;
+        font-weight: 700;
+      }
+
+      .description {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      footer {
+        margin-top: auto;
+        padding: 30px 0 4px;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        text-align: center;
+      }
+
+      footer strong { color: var(--text-main); }
 
       @media (max-width: 600px) {
-        main { padding: 48px 0; }
-        .endpoint { grid-template-columns: 60px 1fr; gap: 8px 12px; }
-        .description { grid-column: 2; }
+        main { padding: 26px 16px 18px; }
+        .hero { padding: 28px 0; }
+        .base-card { padding: 17px; }
+        .endpoint { padding: 16px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
       }
     </style>
   </head>
   <body>
     <main>
-      <p class="eyebrow">Tatero · API service</p>
-      <h1>API server</h1>
-      <p class="intro">The Tatero backend is running. Use the base URL and endpoints below to connect your client.</p>
-      <p class="status">Service online</p>
+      <header class="hero">
+        <p class="eyebrow">Tatero · APF</p>
+        <h1>API service</h1>
+        <p class="intro">Le service Tatero est en ligne. Retrouvez ci-dessous l’adresse de base et les endpoints disponibles pour connecter votre application.</p>
+        <span class="status">Service en ligne</span>
+      </header>
 
-      <p class="base-url">API base URL</p>
-      <code class="base-value"><%= apiBaseUrl %></code>
+      <section class="base-card" aria-label="Adresse de l'API">
+        <div>
+          <span class="base-label">API base URL</span>
+          <code class="base-value"><%= apiBaseUrl %></code>
+        </div>
+        <span class="base-badge">REST API</span>
+      </section>
 
-      <h2>Endpoints</h2>
-      <div class="endpoint-list">
-        <% endpoints.forEach((endpoint) => { %>
-          <div class="endpoint">
-            <span class="method"><%= endpoint.method %></span>
-            <code class="path"><%= endpoint.path %></code>
-            <span class="description"><%= endpoint.description %></span>
-          </div>
-        <% }) %>
-      </div>
+      <section aria-labelledby="endpoints-title">
+        <div class="section-heading">
+          <span class="section-kicker">Référence</span>
+          <h2 id="endpoints-title">Endpoints disponibles</h2>
+        </div>
+        <div class="endpoint-list">
+          <% endpoints.forEach((endpoint) => { %>
+            <article class="endpoint">
+              <div class="endpoint-top">
+                <span class="method"><%= endpoint.method %></span>
+                <code class="path"><%= endpoint.path %></code>
+              </div>
+              <p class="description"><%= endpoint.description %></p>
+            </article>
+          <% }) %>
+        </div>
+      </section>
 
-      <footer>Tatero API</footer>
+      <footer>&copy; <%= new Date().getFullYear() %> <strong>Tatero</strong> · API service</footer>
     </main>
   </body>
 </html>
