@@ -1,6 +1,23 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
+module.exports.getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select(
+      "name gender email workAt createdAt",
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur introuvable." });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 // create new user
 module.exports.createUser = async (req, res) => {
   try {
