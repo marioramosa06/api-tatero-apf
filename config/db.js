@@ -1,7 +1,7 @@
 const mongoose= require("mongoose")
-const db_connect = async () => {
+const db_connect = async (mongodburi) => {
     try{
-        await mongoose.connect(process.env.MONGODB_URI)
+        await mongoose.connect(mongodburi)
         console.log("✓ mongodb connected")
     } catch(err){
         console.log("× mongodb connection failed : ", err.message)
