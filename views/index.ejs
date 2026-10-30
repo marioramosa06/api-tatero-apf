@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f6f2">
+    <title>Tatero API</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Segoe UI", sans-serif;
+        color: #17231f;
+        background: #f4f6f2;
+        font-synthesis: none;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; }
+      main { width: min(880px, calc(100% - 40px)); margin: 0 auto; padding: 72px 0; }
+      .eyebrow { color: #527262; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+      h1 { margin: 12px 0; font-size: clamp(36px, 7vw, 58px); line-height: 1.05; }
+      .intro { max-width: 580px; color: #5f6e67; font-size: 17px; line-height: 1.6; }
+      .status { display: inline-flex; align-items: center; gap: 9px; margin: 24px 0 42px; padding: 9px 13px; border: 1px solid #d5e2d9; border-radius: 999px; background: #fff; font-size: 14px; }
+      .status::before { width: 8px; height: 8px; border-radius: 50%; background: #33845b; content: ""; }
+      .base-url { margin: 0 0 12px; color: #5f6e67; font-size: 13px; font-weight: 700; text-transform: uppercase; }
+      code { color: #17613e; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+      .base-value { display: inline-block; margin-bottom: 30px; padding: 11px 14px; border: 1px solid #dce3dd; border-radius: 6px; background: #fff; font-size: 14px; overflow-wrap: anywhere; }
+      h2 { margin: 0 0 12px; font-size: 20px; }
+      .endpoint-list { border-top: 1px solid #dce3dd; }
+      .endpoint { display: grid; grid-template-columns: 76px minmax(140px, 1fr) 1.2fr; gap: 16px; align-items: center; padding: 15px 4px; border-bottom: 1px solid #dce3dd; }
+      .method { color: #527262; font-size: 12px; font-weight: 800; }
+      .path { font-size: 13px; }
+      .description { color: #68766f; font-size: 14px; }
+      footer { margin-top: 36px; color: #87918b; font-size: 13px; }
+
+      @media (max-width: 600px) {
+        main { padding: 48px 0; }
+        .endpoint { grid-template-columns: 60px 1fr; gap: 8px 12px; }
+        .description { grid-column: 2; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Tatero · API service</p>
+      <h1>API server</h1>
+      <p class="intro">The Tatero backend is running. Use the base URL and endpoints below to connect your client.</p>
+      <p class="status">Service online</p>
+
+      <p class="base-url">API base URL</p>
+      <code class="base-value"><%= apiBaseUrl %></code>
+
+      <h2>Endpoints</h2>
+      <div class="endpoint-list">
+        <% endpoints.forEach((endpoint) => { %>
+          <div class="endpoint">
+            <span class="method"><%= endpoint.method %></span>
+            <code class="path"><%= endpoint.path %></code>
+            <span class="description"><%= endpoint.description %></span>
+          </div>
+        <% }) %>
+      </div>
+
+      <footer>Tatero API</footer>
+    </main>
+  </body>
+</html>
