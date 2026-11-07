@@ -54,6 +54,13 @@ module.exports.getProfile = async (req, res) => {
 module.exports.createUser = async (req, res) => {
   try {
     const normalizedEmail = String(req.body.email || "").trim().toLowerCase();
+    const plainPassword = String(req.body.password || "");
+
+    if (!normalizedEmail || !plainPassword) {
+      return res.status(400).json({
+        message: "Veuillez fournir une adresse e-mail et un mot de passe valides.",
+      });
+    }
 
     // 1. Check if user already exists
     const user = await User.findOne({ email: normalizedEmail });
@@ -65,7 +72,7 @@ module.exports.createUser = async (req, res) => {
 
     // 2. Hash the password
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const hashedPassword = await bcrypt.hash(plainPassword, salt);
     req.body.password = hashedPassword;
     req.body.email = normalizedEmail;
 
@@ -100,6 +107,14 @@ module.exports.authenticateUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const normalizedEmail = String(email || "").trim().toLowerCase();
+
+    if (!normalizedEmail || !password) {
+      return res.status(400).json({
+        hasError: true,
+        message: "Veuillez saisir votre adresse e-mail et votre mot de passe.",
+      });
+    }
+
     const user = await User.findOne({ email: normalizedEmail });
 
     // check the user email
@@ -111,7 +126,7 @@ module.exports.authenticateUser = async (req, res) => {
     }
 
     // verify user password
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await bcrypt.compare(String(password), user.password);
     if (!isValidPassword) {
       return res.status(401).json({
         hasError: true,
@@ -120,7 +135,7 @@ module.exports.authenticateUser = async (req, res) => {
     }
 
     // generate token
-    const secret = process.env.JWT_SECRET;
+    const secret = process.env.JWT_SECRET || "tatero-dev-secret";
     const token = jwt.sign({ id: user._id }, secret, {
       expiresIn: "5d",
     });

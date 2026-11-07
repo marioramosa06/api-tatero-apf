@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      require: [true, "Veuillez préciser votre genre"],
+      required: [true, "Veuillez préciser votre genre"],
     },
     email: {
       type: String,

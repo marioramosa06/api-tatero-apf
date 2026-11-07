@@ -7,8 +7,25 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const invoiceRoutes = require("./routes/invoice");
 
+const allowedOrigins = [
+  "https://tatero-apf.vercel.app",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+].filter(Boolean);
+
 app.use(express.json());
-app.use(cors({ origin: "https://tatero-apf.vercel.app" }));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("CORS policy: origin not allowed"));
+    },
+    credentials: true,
+  }),
+);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -48,10 +65,20 @@ app.get("/", (req, res) => {
 app.use("/api", authRoutes);
 app.use("/api", invoiceRoutes);
 
-db_connect(process.env.MONGODB_URI)
-  .then(() => {
-    app.listen(8000, () => {
-      console.log(`Server running on http://localhost:8000`);
+const startServer = async () => {
+  try {
+    await db_connect(process.env.MONGODB_URI);
+    const port = process.env.PORT || 8000;
+    app.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}`);
     });
-  })
-  .catch((err) => console.error("Database connection error:", err));
+  } catch (err) {
+    console.error("Database connection error:", err);
+  }
+};
+
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = app;

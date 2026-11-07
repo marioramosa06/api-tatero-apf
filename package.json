@@ -1,12 +1,13 @@
 {
-  "name": "tatitra.apf",
+  "name": "tatero.apf",
   "version": "1.0.0",
-  "description": "backend for tatitra apf",
+  "description": "backend for tatero apf",
   "license": "ISC",
   "author": "Ramosa Mario",
   "type": "commonjs",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
