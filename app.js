@@ -27,6 +27,18 @@ app.use(
   }),
 );
 
+app.use("/api", async (req, res, next) => {
+  try {
+    await db_connect(process.env.MONGODB_URI);
+    next();
+  } catch (err) {
+    console.error("Database connection error:", err.message);
+    res.status(503).json({
+      message: "The service is temporarily unavailable. Please try again later.",
+    });
+  }
+});
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -74,6 +86,7 @@ const startServer = async () => {
     });
   } catch (err) {
     console.error("Database connection error:", err);
+    process.exit(1);
   }
 };
 
