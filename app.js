@@ -6,6 +6,7 @@ const db_connect = require("./config/db");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const invoiceRoutes = require("./routes/invoice");
+const messageRoutes = require("./routes/message");
 
 const allowedOrigins = [
   "https://tatero-apf.vercel.app",
@@ -70,12 +71,21 @@ app.get("/", (req, res) => {
         path: "/invoices/:id",
         description: "Delete an invoice",
       },
+      { method: "POST", path: "/messages", description: "Send a contact message" },
+      { method: "GET", path: "/messages", description: "List contact messages" },
+      { method: "GET", path: "/messages/:id", description: "Get a contact message" },
+      {
+        method: "DELETE",
+        path: "/messages/:id",
+        description: "Delete a contact message",
+      },
     ],
   });
 });
 
 app.use("/api", authRoutes);
 app.use("/api", invoiceRoutes);
+app.use("/api", messageRoutes);
 
 const startServer = async () => {
   try {
